@@ -11,3 +11,4 @@ void test_temp_high_triggers_alert(void) {
 void test_temp_normal_does_not_trigger_alert(void) {
     TEST_ASSERT_FALSE(check_temperature(36.5));
 }
+
