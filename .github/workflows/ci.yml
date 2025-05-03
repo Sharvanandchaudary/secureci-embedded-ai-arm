@@ -29,7 +29,7 @@ jobs:
         path: build/firmware.elf
 
     - name: Upload firmware.hex
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: firmware-hex
         path: build/firmware.hex
