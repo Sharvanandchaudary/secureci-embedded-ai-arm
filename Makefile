@@ -9,7 +9,8 @@ CFLAGS = -mcpu=cortex-m4 -mthumb -Wall -O2 -g -fno-unwind-tables -fno-asynchrono
 LDFLAGS = -T linker_script.ld -nostartfiles
 
 # Source and Output
-SRC = $(wildcard src/*.c)
+SRC = src/main.c src/sensors.c src/syscalls.c src/startup.c
+
 OBJ = $(SRC:.c=.o)
 INCLUDES = -Iinclude
 OUTDIR = build
