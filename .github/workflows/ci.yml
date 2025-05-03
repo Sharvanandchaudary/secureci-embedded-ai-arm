@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install ARM GCC Toolchain
       run: |
@@ -23,7 +23,7 @@ jobs:
       run: make
 
     - name: Upload firmware.elf
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: firmware-elf
         path: build/firmware.elf
