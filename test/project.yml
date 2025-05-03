@@ -111,8 +111,8 @@
 # and release collections. Usually it's better to use paths and let
 # Ceedling do the work for you!
 :files:
-  :test: []
-  :source: []
+  :source:
+    - ../src/sensors.c
 
 # Compilation symbols to be injected into builds
 # See documentation for advanced options:
