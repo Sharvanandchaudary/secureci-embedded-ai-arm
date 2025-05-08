@@ -1,4 +1,4 @@
-#include "sensors.h"
+#include "sensors.c"
 #include <stdio.h>
 
 int main(void) {
