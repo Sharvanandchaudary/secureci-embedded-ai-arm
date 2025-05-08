@@ -1,0 +1,11 @@
+using sysbus
+mach create "test"
+
+machine LoadPlatformDescription @/project/stm32f1.repl
+
+sysbus LoadELF @/project/build/firmware.elf
+
+logTester: LogTester @ sysbus.uart2
+logTester RecordTo "/project/output.log"
+
+start

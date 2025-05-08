@@ -16,11 +16,9 @@ SECTIONS
   } > FLASH
 
   .data : {
-    __data_start__ = .;
     _sdata = .;
     *(.data*)
     _edata = .;
-    __data_end__ = .;
   } > RAM AT > FLASH
 
   _sidata = LOADADDR(.data);
@@ -34,8 +32,6 @@ SECTIONS
     __bss_end__ = .;
   } > RAM
 
-  __heap_start__ = .;
-  _end = .;
   __end__ = .;
   PROVIDE(end = .);
 }

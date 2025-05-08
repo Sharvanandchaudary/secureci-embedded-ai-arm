@@ -1,0 +1,19 @@
+using sysbus
+mach create "test"
+
+machine LoadPlatformDescriptionFromString """
+cpu: CPU @ sysbus
+    cpuType: "cortex-m3"
+
+sysbus:
+    uart2: UART
+        address: 0x40004400
+"""
+
+sysbus LoadELF @/project/build/firmware.elf
+
+# ✅ Mock output capture
+logTester: LogTester @ sysbus.uart2
+logTester RecordTo "/project/output.log"
+
+start
