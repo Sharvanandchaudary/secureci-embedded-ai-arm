@@ -1,0 +1,7 @@
+[INFO] System booting...
+[INFO] Initializing sensors...
+[WARNING] Temperature sensor delay detected.
+[ERROR] Failed to initialize UART interface.
+[INFO] Reboot scheduled in 5 minutes.
+[ERROR] Overcurrent on I2C bus.
+[INFO] All systems stable.

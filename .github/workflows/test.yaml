@@ -1,0 +1,50 @@
+name: Test Firmware
+
+on:
+  workflow_run:
+    workflows: ["Build Firmware"]
+    types:
+      - completed
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download firmware.elf artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: firmware-elf
+        path: build
+
+    - name: Install QEMU
+      run: sudo apt update && sudo apt install -y qemu-system-arm
+
+    - name: Simulate firmware with QEMU
+      run: |
+        qemu-system-arm \
+          -M stm32-p103 \
+          -nographic \
+          -kernel build/firmware.elf \
+          -serial file:uart_output.log || true
+
+    - name: Upload UART Output Log
+      uses: actions/upload-artifact@v4
+      with:
+        name: uart-log
+        path: uart_output.log
+
+    - name: Basic UART Output Test
+      run: |
+        echo "Captured UART log:"
+        cat uart_output.log
+        echo "------"
+        if grep -q "Temperature" uart_output.log; then
+          echo "✅ UART test passed"
+        else
+          echo "❌ UART test failed"
+          exit 1
+        fi

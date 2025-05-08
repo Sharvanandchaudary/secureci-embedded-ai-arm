@@ -1,7 +1,11 @@
+/* Simple STM32F103-compatible memory layout for QEMU testing */
+
+ENTRY(_start)
+
 MEMORY
 {
-  FLASH (rx)  : ORIGIN = 0x08000000, LENGTH = 512K
-  RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = 128K
+  FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 256K
+  RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = 40K
 }
 
 SECTIONS
@@ -10,31 +14,27 @@ SECTIONS
     KEEP(*(.isr_vector))
     *(.text*)
     *(.rodata*)
-    
-    . = ALIGN(4);
-    KEEP(*(.ARM.exidx*))
-    *(.eh_frame*)     /* Include but consume */
-    
-    . = ALIGN(4);
-    _etext = .;
+    *(.glue_7)
+    *(.glue_7t)
+    *(.eh_frame)
   } > FLASH
 
-  .data : AT(_etext) {
-    _sdata = .;
+  .data : AT (ADDR(.text) + SIZEOF(.text)) {
     *(.data*)
-    _edata = .;
   } > RAM
 
   .bss : {
-    _sbss = .;
     *(.bss*)
     *(COMMON)
-    _ebss = .;
   } > RAM
 
-  .heap : {
-    _end = .;
-    PROVIDE(end = .);
-    . = . + 0x1000;   /* Reserve 4KB for heap */
+  /* Optional stack section */
+  .stack (COPY) : {
+    stack_start = .;
+    . = . + 0x1000; /* 4KB stack */
+    stack_end = .;
   } > RAM
+
+  _end = .;
+  PROVIDE(end = .);
 }
