@@ -1,10 +1,10 @@
-#include "sensors.c"
-#include <stdio.h>
+#include "sensors.h"
 
 int main(void) {
     init_peripherals();
 
     float temp = read_temperature();
+
     if (temp > 40.0) {
         send_uart_alert("⚠️ High Temperature Detected!\n");
     } else {

@@ -1,10 +1,15 @@
 #include "sensors.h"
+#include <string.h>
+#include <unistd.h>
 
-// Dummy implementations for CI / QEMU
 void init_peripherals(void) {
-    // Simulated peripherals init (no-op)
+    // No real hardware init
 }
 
 float read_temperature(void) {
-    return 36.5;  // Normal simulated temp
+    return 36.5; // Simulated temperature
+}
+
+void send_uart_alert(const char *msg) {
+    write(1, msg, strlen(msg));  // write to UART/STDOUT
 }
