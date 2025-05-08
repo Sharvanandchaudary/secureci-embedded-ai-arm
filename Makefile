@@ -4,9 +4,12 @@ CC = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 
 # Flags
-CFLAGS = -mcpu=cortex-m4 -mthumb -Wall -O2 -g -fno-unwind-tables -fno-asynchronous-unwind-tables
+CFLAGS = -mcpu=cortex-m3 -mthumb -Wall -O0 -g -Iinclude
+LDFLAGS = -T linker_script.ld -specs=rdimon.specs -lc -lrdimon
 
-LDFLAGS = -T linker_script.ld -nostartfiles
+
+
+
 
 # Source and Output
 SRC = src/main.c src/sensors.c src/syscalls.c src/startup.c
