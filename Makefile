@@ -1,28 +1,29 @@
+# Target and Toolchain
 TARGET = firmware
-BUILD_DIR = build
-
 CC = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 
-CFLAGS = -mcpu=cortex-m3 -mthumb -O0 -g -Wall -ffreestanding -nostdlib
-LDFLAGS = -Tlinker_script.ld -nostartfiles -Wl,--gc-sections
+# Flags
+CFLAGS = -mcpu=cortex-m4 -mthumb -Wall -O2 -g -fno-unwind-tables -fno-asynchronous-unwind-tables
 
-SRCS = main.c sensors.c
-OBJS = $(SRCS:.c=.o)
+LDFLAGS = -T linker_script.ld -nostartfiles
 
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex
+# Source and Output
+SRC = src/main.c src/sensors.c src/syscalls.c src/startup.c
 
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
+OBJ = $(SRC:.c=.o)
+INCLUDES = -Iinclude
+OUTDIR = build
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Rules
+all: $(OUTDIR)/$(TARGET).elf $(OUTDIR)/$(TARGET).hex
 
-$(BUILD_DIR)/$(TARGET).elf: $(OBJS) | $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
+$(OUTDIR)/$(TARGET).elf: $(SRC)
+	@mkdir -p $(OUTDIR)
+	$(CC) $(CFLAGS) $(INCLUDES) $(LDFLAGS) -o $@ $^
 
-$(BUILD_DIR)/$(TARGET).hex: $(BUILD_DIR)/$(TARGET).elf
+$(OUTDIR)/$(TARGET).hex: $(OUTDIR)/$(TARGET).elf
 	$(OBJCOPY) -O ihex $< $@
 
 clean:
-	rm -rf *.o $(BUILD_DIR)
+	rm -rf $(OUTDIR)/*.elf $(OUTDIR)/*.hex
