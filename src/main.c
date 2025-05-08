@@ -1,7 +1,16 @@
-#include <stdio.h>
+#include "sensors.h"
 
 int main(void) {
-    puts("✅ Firmware running via semihosting!");
+    init_peripherals();
+
+    float temp = read_temperature();
+
+    if (temp > 40.0) {
+        send_uart_alert("⚠️ High Temperature Detected!\n");
+    } else {
+        send_uart_alert("✅ Temperature Normal\n");
+    }
+
     while (1);
     return 0;
 }
