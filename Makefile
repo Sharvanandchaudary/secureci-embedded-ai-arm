@@ -12,14 +12,14 @@ SRC = src/main.c src/sensors.c
 OUTDIR = build
 
 # Rules
-all: $(OUTDIR)/$(TARGET).elf $(OUTDIR)/$(TARGET).hex
+all: $(OUTDIR)\$(TARGET).elf $(OUTDIR)\$(TARGET).hex
 
-$(OUTDIR)/$(TARGET).elf: $(SRC)
+$(OUTDIR)\$(TARGET).elf: $(SRC)
 	@if not exist $(OUTDIR) mkdir $(OUTDIR)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
-$(OUTDIR)/$(TARGET).hex: $(OUTDIR)/$(TARGET).elf
+$(OUTDIR)\$(TARGET).hex: $(OUTDIR)\$(TARGET).elf
 	$(OBJCOPY) -O ihex $< $@
 
 clean:
-	if exist $(OUTDIR) rmdir /s /q $(OUTDIR)
+	@if exist $(OUTDIR) rmdir /s /q $(OUTDIR)

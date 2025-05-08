@@ -1,11 +1,18 @@
-using sysbus
-mach create "test"
+:name: STM32F0 Simulation
+:description: Run STM32 firmware and capture UART output.
 
-machine LoadPlatformDescription @/project/stm32f1.repl
+using sysbus
+mach create "secureci_m3"
+
+machine LoadPlatformDescription @/project/platform.repl
 
 sysbus LoadELF @/project/build/firmware.elf
 
 logTester: LogTester @ sysbus.uart2
 logTester RecordTo "/project/output.log"
 
-start
+machine StartGdbServer 1234 true
+
+macro reset """
+    sysbus LoadELF @/project/build/firmware.elf
+"""
