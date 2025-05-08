@@ -1,50 +1,32 @@
-name: Test Firmware
+name: Test Firmware in Renode
 
 on:
   workflow_run:
-    workflows: ["Build Firmware"]
+    workflows: [ "Build Firmware" ]
     types:
       - completed
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v3
 
-    - name: Download firmware.elf artifact
+    - name: Download firmware artifact
       uses: actions/download-artifact@v4
       with:
         name: firmware-elf
         path: build
 
-    - name: Install QEMU
-      run: sudo apt update && sudo apt install -y qemu-system-arm
-
-    - name: Simulate firmware with QEMU
+    - name: Run Renode simulation
       run: |
-        qemu-system-arm \
-          -M stm32-p103 \
-          -nographic \
-          -kernel build/firmware.elf \
-          -serial file:uart_output.log || true
+        docker run --rm \
+          -v "${{ github.workspace }}:/project" \
+          -w /project \
+          antmicro/renode \
+          bash -c "renode /project/test.resc -e quit-after-run"
 
-    - name: Upload UART Output Log
-      uses: actions/upload-artifact@v4
-      with:
-        name: uart-log
-        path: uart_output.log
-
-    - name: Basic UART Output Test
-      run: |
-        echo "Captured UART log:"
-        cat uart_output.log
-        echo "------"
-        if grep -q "Temperature" uart_output.log; then
-          echo "✅ UART test passed"
-        else
-          echo "❌ UART test failed"
-          exit 1
-        fi
+    - name: Check UART output
+      run: grep "✅ Temperature Normal" output.log
